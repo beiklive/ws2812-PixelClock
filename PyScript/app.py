@@ -1,7 +1,10 @@
 import time
 from rpi_ws281x import PixelStrip, Color
 import threading
-import argparse
+import json
+import sys
+import utils
+from utils import LED_H, LED_W
  
 LED_COUNT = 256        # LED灯的个数
 LED_PIN = 18          # DI端接GPIO18
@@ -13,9 +16,69 @@ LED_BRIGHTNESS = 1  # Set to 0 for darkest and 255 for brightest
 LED_INVERT = False    # True to invert the signal (when using NPN transistor level shift)
 LED_CHANNEL = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
+class LED_Light:
+    def __init__(self, strip):
+        self.strip = strip
+        self.brightness = 1
+        self.is_running = False
+        self.thread = None
+        self.IsChanged = False
+
+    def start(self):
+        self.is_running = True
+        self.thread = threading.Thread(target=self.run)
+        self.thread.start()
+
+    def stop(self):
+        self.is_running = False
+        self.thread.join()
+
+    def run(self):
+        while self.is_running:
+            if self.IsChanged:
+                self.strip.setBrightness(self.brightness)
+                self.IsChanged = False
+            time.sleep(0.01)
+
+    def set_brightness(self, brightness):
+        self.brightness = brightness
+        self.IsChanged = True
+
+    def get_brightness(self):
+        return self.brightness
+
+class LED_Obj:
+    def __init__(self, strip, library):
+        # 读取本地json文件
+        print("read")
+        with open(library, 'r') as f:
+            print("read")
+            self.config = json.load(f)
+        self.strip = strip
+        self.w = self.config['w']
+        print(self.w)
+        self.h = self.config['h']
+        self.data = self.config['data']
+        self.x = 0
+        self.y = 0
+
+    def set(self, x, y):
+        self.x = x
+        self.y = y
+        for i in range(self.w):
+            for j in range(self.h):
+                if self.data[j*self.w+i] == 1:
+                    print(i)
+                    self.strip.setPixelColor(utils.pos(x+i, y+j), Color(0, 0, 255))
+
+    def clear(self):
+        for i in range(self.w):
+            for j in range(self.h):
+                if self.data[j*self.w+i] == 1:
+                    self.strip.setPixelColor(utils.pos(self.x+i, self.y+j), Color(0, 0, 0))
+        self.strip.show()
 
 
-# 以下为LED模式变换的各个函数
 def colorWipe(strip, color, wait_ms=20):
     """一次擦除显示像素的颜色."""
     for i in range(strip.numPixels()):
@@ -23,111 +86,33 @@ def colorWipe(strip, color, wait_ms=20):
 
         strip.show()
         time.sleep(wait_ms / 1000.0)
- 
-def theaterChase(strip, color, wait_ms=50, iterations=10):
-    """电影影院灯光风格的追逐动画."""
-    for j in range(iterations):
-        for q in range(3):
-            for i in range(0, strip.numPixels(), 3):
-                strip.setPixelColor(i + q, color)
-            strip.show()
-            time.sleep(wait_ms / 1000.0)
-            for i in range(0, strip.numPixels(), 3):
-                strip.setPixelColor(i + q, 0)
- 
-def wheel(pos):
-    """生成横跨0-255个位置的彩虹颜色."""
-    if pos < 85:
-        return Color(pos * 3, 255 - pos * 3, 0)
-    elif pos < 170:
-        pos -= 85
-        return Color(255 - pos * 3, 0, pos * 3)
-    else:
-        pos -= 170
-        return Color(0, pos * 3, 255 - pos * 3)
- 
-def rainbow(strip, wait_ms=20, iterations=1):
-    """绘制彩虹，褪色的所有像素一次."""
-    for j in range(256 * iterations):
-        for i in range(strip.numPixels()):
-            strip.setPixelColor(i, wheel((i + j) & 255))
-        strip.show()
-        time.sleep(wait_ms / 1000.0)
- 
-def rainbowCycle(strip, wait_ms=10, iterations=5):
-    """画出均匀分布在所有像素上的彩虹."""
-    for j in range(256 * iterations):
-        for i in range(strip.numPixels()):
-            strip.setPixelColor(i, wheel(
-                (int(i * 256 / strip.numPixels()) + j) & 255))
-        strip.show()
-        time.sleep(wait_ms / 1000.0)
- 
-def theaterChaseRainbow(strip, wait_ms=50):
-    """旋转的彩色灯光."""
-    for j in range(256):
-        for q in range(3):
-            for i in range(0, strip.numPixels(), 3):
-                strip.setPixelColor(i + q, wheel((i + j) % 255))
-            strip.show()
-            time.sleep(wait_ms / 1000.0)
-            for i in range(0, strip.numPixels(), 3):
-                strip.setPixelColor(i + q, 0)
-
-def brightness(strip):
-    """设置灯光的亮度."""
-    while True:
-        for i in range(255):
-            strip.setBrightness(i)
-            strip.show()
-            time.sleep(0.01)
-        for i in range(255, 1, -1):
-            strip.setBrightness(i)
-            strip.show()
-            time.sleep(0.01)
-
 
 
 # Main program logic follows:
 if __name__ == '__main__':
-    # Process arguments
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--clear', action='store_true', help='clear the display on exit')
-    args = parser.parse_args()
- 
-    # Create NeoPixel object with appropriate configuration.
     strip = PixelStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
-    # Intialize the library (must be called once before other functions).
     strip.begin()
  
     print('Press Ctrl-C to quit.')
-    if not args.clear:
-        print('Use "-c" argument to clear LEDs on exit')
- 
+    mybright = LED_Light(strip)
     try:
-        # t = threading.Thread(target=brightness, name='aa', args=(strip,))
-        # t.start()
         while True:
-            print('Color wipe animations.')
-            colorWipe(strip, Color(255, 255, 0))  # Red wipe
-            print(strip.getPixels()[1])
-            colorWipe(strip, Color(0, 0, 0), 30)
-            colorWipe(strip, Color(0, 255, 255))  # Blue wipe
-            colorWipe(strip, Color(0, 0, 0), 30)
-            colorWipe(strip, Color(255, 0, 255))  # Green wipe
-            colorWipe(strip, Color(0, 0, 0), 30)
-            
-            print('Theater chase animations.')
-            print('Rainbow animations.')
-            rainbow(strip)
-            colorWipe(strip, Color(0, 0, 0), 50)
-            rainbowCycle(strip)
-            colorWipe(strip, Color(0, 0, 0), 40)
-            break
-        while True:
-            rainbowCycle(strip)
-            #print('***********************')
-            colorWipe(strip, Color(0, 0, 0), 100)
+            mybright.start()
+            Obj = LED_Obj(strip, "font.json")
+            for i in range(LED_W + 1):
+                Obj.clear()
+                Obj.set(i,0)
+                mybright.set_brightness(int(i/LED_W*255))
+                strip.show()
+                time.sleep(0.05)
+
+            for i in range(LED_W + 1, 0, -1):
+                Obj.clear()
+                Obj.set(i,0)
+                mybright.set_brightness(int(i/LED_W*255))
+                strip.show()
+                time.sleep(0.05)
  
     except:
+        mybright.stop()
         colorWipe(strip, Color(0, 0, 0), 100)
