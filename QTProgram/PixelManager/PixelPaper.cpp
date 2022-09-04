@@ -3,7 +3,8 @@
 PixelPaper::PixelPaper(QWidget *parent)
 	: QWidget(parent)
 {
-	ui.setupUi(this);
+	//ui.setupUi(this);
+	PaperInit();
 }
 
 void PixelPaper::PaperInit()
@@ -52,6 +53,7 @@ void PixelPaper::SetSize()
 			map[i][j] = temp[i][j];
 		}
 	}
+	emit DrawFinish(map);
 }
 
 void PixelPaper::DrawMap()
@@ -182,6 +184,7 @@ void PixelPaper::mouseReleaseEvent(QMouseEvent* event)
 {
 	m_isMouseDown = false;
 	m_isLButtonDown = false;
+	emit DrawFinish(map);
 }
 
 

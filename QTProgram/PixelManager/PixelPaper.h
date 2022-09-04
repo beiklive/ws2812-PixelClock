@@ -76,4 +76,6 @@ public slots:
 	void ChangeWidth(int num);
 	void ChangeHeight(int num);
 	void ChangeStep(int num);
+signals:
+	void DrawFinish(PixelMatrix e);
 };

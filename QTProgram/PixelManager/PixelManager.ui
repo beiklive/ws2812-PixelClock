@@ -76,6 +76,9 @@
                   </item>
                   <item>
                    <widget class="QSpinBox" name="spinBox3">
+                    <property name="minimum">
+                     <number>1</number>
+                    </property>
                     <property name="value">
                      <number>32</number>
                     </property>
@@ -94,6 +97,9 @@
                   </item>
                   <item>
                    <widget class="QSpinBox" name="spinBox_2">
+                    <property name="minimum">
+                     <number>1</number>
+                    </property>
                     <property name="value">
                      <number>8</number>
                     </property>
@@ -114,6 +120,9 @@
                 </item>
                 <item>
                  <widget class="QSpinBox" name="spinBox">
+                  <property name="minimum">
+                   <number>5</number>
+                  </property>
                   <property name="value">
                    <number>20</number>
                   </property>
@@ -164,7 +173,7 @@
          </widget>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_3">
+         <layout class="QVBoxLayout" name="verticalLayout_3" stretch="3,1">
           <item>
            <widget class="QScrollArea" name="scrollArea">
             <property name="widgetResizable">
@@ -176,14 +185,14 @@
                <x>0</x>
                <y>0</y>
                <width>1001</width>
-               <height>576</height>
+               <height>567</height>
               </rect>
              </property>
              <layout class="QGridLayout" name="gridLayout_2">
               <item row="0" column="0">
                <widget class="PixelPaper" name="widget" native="true">
                 <property name="styleSheet">
-                 <string notr="true">background-color: rgb(49, 155, 255);</string>
+                 <string notr="true"/>
                 </property>
                </widget>
               </item>
@@ -192,39 +201,14 @@
            </widget>
           </item>
           <item>
-           <widget class="QScrollArea" name="scrollArea_3">
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>180</height>
-             </size>
-            </property>
-            <property name="widgetResizable">
-             <bool>true</bool>
-            </property>
-            <widget class="QWidget" name="scrollAreaWidgetContents_3">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>1001</width>
-               <height>178</height>
-              </rect>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_3">
-              <item row="0" column="0">
-               <widget class="QTextEdit" name="textEdit">
-                <property name="html">
-                 <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+           <widget class="FormatJson" name="textEdit">
+            <property name="html">
+             <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
+            </property>
            </widget>
           </item>
          </layout>
@@ -249,9 +233,18 @@ p, li { white-space: pre-wrap; }
    <header>pixelpaper.h</header>
    <container>1</container>
    <slots>
+    <signal>DrawFinish(PixelMatrix)</signal>
     <slot>ChangeWidth(int)</slot>
     <slot>ChangeHeight(int)</slot>
     <slot>ChangeStep(int)</slot>
+   </slots>
+  </customwidget>
+  <customwidget>
+   <class>FormatJson</class>
+   <extends>QTextEdit</extends>
+   <header>formatjson.h</header>
+   <slots>
+    <slot>GetDrawFinish(PixelMatrix)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -304,6 +297,22 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>383</x>
      <y>171</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>widget</sender>
+   <signal>DrawFinish(PixelMatrix)</signal>
+   <receiver>textEdit</receiver>
+   <slot>GetDrawFinish(PixelMatrix)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>659</x>
+     <y>409</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>658</x>
+     <y>726</y>
     </hint>
    </hints>
   </connection>
