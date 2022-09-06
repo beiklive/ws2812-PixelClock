@@ -70,10 +70,10 @@ void FormatJson::PixelMatrixToJson(PixelMatrix pixelMatrix)
 	data += "]";
 	QString body = QString("\
 {\n\
-	'w' : %1,\n\
-	'h' : %2,\n\
-	'data' : %3,\n\
-	'color' : %4\n\
+'w' : %1,\n\
+'h' : %2,\n\
+'data' : %3,\n\
+'color' : %4\n\
 }\
 	").arg(QString::number(m_width))
 		.arg(QString::number(m_height))

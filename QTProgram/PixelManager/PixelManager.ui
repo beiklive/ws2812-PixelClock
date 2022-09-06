@@ -242,10 +242,7 @@ p, li { white-space: pre-wrap; }
   <customwidget>
    <class>FormatJson</class>
    <extends>QTextEdit</extends>
-   <header>formatjson.h</header>
-   <slots>
-    <slot>GetDrawFinish(PixelMatrix)</slot>
-   </slots>
+   <header>FormatJson.h</header>
   </customwidget>
  </customwidgets>
  <resources>
