@@ -41,14 +41,14 @@
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_4">
               <item>
-               <widget class="QPushButton" name="pushButton">
+               <widget class="QPushButton" name="SaveFileBtn">
                 <property name="text">
                  <string>SAVE</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_2">
+               <widget class="QPushButton" name="LoadFileBtn">
                 <property name="text">
                  <string>LOAD</string>
                 </property>
@@ -76,6 +76,12 @@
                   </item>
                   <item>
                    <widget class="QSpinBox" name="spinBox3">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>30</height>
+                     </size>
+                    </property>
                     <property name="minimum">
                      <number>1</number>
                     </property>
@@ -97,6 +103,12 @@
                   </item>
                   <item>
                    <widget class="QSpinBox" name="spinBox_2">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>30</height>
+                     </size>
+                    </property>
                     <property name="minimum">
                      <number>1</number>
                     </property>
@@ -120,6 +132,12 @@
                 </item>
                 <item>
                  <widget class="QSpinBox" name="spinBox">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>30</height>
+                   </size>
+                  </property>
                   <property name="minimum">
                    <number>5</number>
                   </property>
@@ -138,20 +156,65 @@
              <property name="title">
               <string>Paint</string>
              </property>
-             <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <layout class="QVBoxLayout" name="verticalLayout_6">
               <item>
-               <widget class="QPushButton" name="pushButton_3">
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
+               <layout class="QHBoxLayout" name="horizontalLayout_2">
+                <item>
+                 <widget class="QLabel" name="label_4">
+                  <property name="text">
+                   <string>LeftMouse</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="Color1">
+                  <property name="minimumSize">
+                   <size>
+                    <width>80</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_4">
-                <property name="text">
-                 <string>PushButton</string>
-                </property>
-               </widget>
+               <layout class="QHBoxLayout" name="horizontalLayout_6">
+                <item>
+                 <widget class="QLabel" name="label_5">
+                  <property name="text">
+                   <string>RightMouse</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="Color2">
+                  <property name="minimumSize">
+                   <size>
+                    <width>80</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_7">
+                <item>
+                 <widget class="QPushButton" name="pushButton_3">
+                  <property name="text">
+                   <string>Clear</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </item>
              </layout>
             </widget>
@@ -184,7 +247,7 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>1001</width>
+               <width>964</width>
                <height>567</height>
               </rect>
              </property>
@@ -202,12 +265,15 @@
           </item>
           <item>
            <widget class="FormatJson" name="textEdit">
+            <property name="styleSheet">
+             <string notr="true">font: 12pt &quot;Consolas&quot;;</string>
+            </property>
             <property name="html">
              <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Consolas'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Microsoft YaHei UI'; font-size:9pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
           </item>
@@ -237,6 +303,7 @@ p, li { white-space: pre-wrap; }
     <slot>ChangeWidth(int)</slot>
     <slot>ChangeHeight(int)</slot>
     <slot>ChangeStep(int)</slot>
+    <slot>ClearPaper()</slot>
    </slots>
   </customwidget>
   <customwidget>
@@ -272,8 +339,8 @@ p, li { white-space: pre-wrap; }
    <slot>ChangeStep(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>127</x>
-     <y>243</y>
+     <x>195</x>
+     <y>279</y>
     </hint>
     <hint type="destinationlabel">
      <x>353</x>
@@ -288,8 +355,8 @@ p, li { white-space: pre-wrap; }
    <slot>ChangeWidth(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>112</x>
-     <y>185</y>
+     <x>194</x>
+     <y>202</y>
     </hint>
     <hint type="destinationlabel">
      <x>383</x>
@@ -310,6 +377,22 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>658</x>
      <y>726</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_3</sender>
+   <signal>clicked()</signal>
+   <receiver>widget</receiver>
+   <slot>ClearPaper()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>74</x>
+     <y>402</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>560</x>
+     <y>348</y>
     </hint>
    </hints>
   </connection>

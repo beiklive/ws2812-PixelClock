@@ -231,3 +231,8 @@ void PixelPaper::ChangeStep(int num)
 	SetStep(num);
 	DrawMap();
 }
+
+void PixelPaper::ClearPaper() {
+	ClearAllColor();
+	emit DrawFinish(map);
+}

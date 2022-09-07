@@ -20,11 +20,37 @@ void FormatJson::SetTextEditPtr(FormatJson* ptr)
 	}
 }
 
-//PixelMatrix FormatJson::JsonToPixelMatrix()
-//{
-//	QJsonObject body = QJsonDocument::fromJson(m_textEdit->toPlainText().toUtf8()).object();
-//	return ;
-//}
+PixelMatrix FormatJson::JsonToPixelMatrix()
+{
+	QJsonObject body = QJsonDocument::fromJson(m_textEdit->toPlainText().toUtf8()).object();
+	QStringList keys = body.keys();
+    for(int i = 0; i < keys.size(); i++)
+    {
+        qDebug() << "key" << i << " is:" << keys.at(i);
+    }
+
+	int width = body["w"].toString().toInt();
+	int height = body["h"].toString().toInt();
+	qDebug() << width << height;
+	
+	auto dataarray = body["color"].toArray();
+	QVector<QVector<QColor>> data;
+	for (int i = 0; i < height; i++)
+	{
+		QVector<QColor> row;
+		for (int j = 0; j < width; j++)
+		{
+			// TODO: json读取数组有问题，初步方案，修改存储时的数组部分的存储方式
+			QColor color;
+			color.setNamedColor(dataarray[i * width + j].toString());
+			qDebug() << "key" << dataarray[i * width + j].toString();
+			row.push_back(color);
+		}
+		data.push_back(row);
+	}
+	//PixelMatrix matrix = PixelMatrix{ width.toInt(), QVector<QColor>(height.toInt(), Qt::black) };
+	return data;
+}
 
 void FormatJson::PixelMatrixToJson(PixelMatrix pixelMatrix)
 {
@@ -32,8 +58,8 @@ void FormatJson::PixelMatrixToJson(PixelMatrix pixelMatrix)
 	m_width = pixelMatrix[0].length();
 	QString data;
 	QString colo;
-	data += "[\n";
-	colo += "[\n";
+	data += "[";
+	colo += "[";
 	for (int j = 0; j < m_width; ++j)
 	{
 		for (int i = 0; i < m_height; ++i)
@@ -42,8 +68,8 @@ void FormatJson::PixelMatrixToJson(PixelMatrix pixelMatrix)
 			auto g = pixelMatrix[i][j].green();
 			auto b = pixelMatrix[i][j].blue();
 			colo += QString("[%1,%2,%3]").arg(QString::number(r))
-										.arg(QString::number(g))
-										.arg(QString::number(b));
+				.arg(QString::number(g))
+				.arg(QString::number(b));
 			if (r || g || b) {
 				data += "1";
 			}
@@ -51,10 +77,10 @@ void FormatJson::PixelMatrixToJson(PixelMatrix pixelMatrix)
 			{
 				data += "0";
 			}
-			
+
 			if (j == m_width - 1 && i == m_height - 1)
 			{
-				
+
 			}
 			else {
 				data += ",";
@@ -62,25 +88,20 @@ void FormatJson::PixelMatrixToJson(PixelMatrix pixelMatrix)
 			}
 
 		}
-		colo += "\n";
-		data += "\n";
-			
+		colo += "";
+		data += "";
+
 	}
 	colo += "]";
 	data += "]";
-	QString body = QString("\
-{\n\
-'w' : %1,\n\
-'h' : %2,\n\
-'data' : %3,\n\
-'color' : %4\n\
-}\
-	").arg(QString::number(m_width))
-		.arg(QString::number(m_height))
-		.arg(data)
-		.arg(colo);
-	
-	m_textEdit->setText(body);
+	QJsonObject jsonbody;
+	jsonbody.insert("w", QString::number(m_width));
+	jsonbody.insert("h", QString::number(m_height));
+	jsonbody.insert("data", data);
+	jsonbody.insert("color", colo);
+
+
+	m_textEdit->setText(QString(QJsonDocument(jsonbody).toJson()));
 }
 
 

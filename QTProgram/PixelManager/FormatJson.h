@@ -4,7 +4,10 @@
 #include <QTextEdit>
 #include "ui_FormatJson.h"
 #include <QJsonObject>
+#include <QJsonArray>
 #include <QJsonDocument>
+#include<QDebug>
+#include<QFile>
 
 //#include "PixelPaper.h"
 
@@ -23,7 +26,7 @@ public:
 
 	void InfoFormat();
 	void SetTextEditPtr(FormatJson* ptr);
-	//PixelMatrix JsonToPixelMatrix();
+	PixelMatrix JsonToPixelMatrix();
 	void PixelMatrixToJson(PixelMatrix pixelMatrix);
 private:
 	Ui::FormatJson ui;
